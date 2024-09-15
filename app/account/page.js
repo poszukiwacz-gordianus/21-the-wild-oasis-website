@@ -1,3 +1,7 @@
+export const metadata = {
+  title: "Gest area",
+};
+
 export default function Page() {
   return (
     <div>
