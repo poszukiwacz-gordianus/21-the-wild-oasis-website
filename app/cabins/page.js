@@ -2,16 +2,15 @@ import { Suspense } from "react";
 
 import CabinList from "@/app/_components/CabinList";
 import Spinner from "@/app/_components/Spinner";
-
-// export const revalidate = 0;
-export const revalidate = 3600;
-// export const revalidate = 15;
+import Filter from "../_components/Filter";
 
 export const metadata = {
   title: "Cabins",
 };
 
-export default function Page() {
+export default function Page({ searchParams }) {
+  const filter = searchParams?.capacity ?? "all";
+
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -26,8 +25,13 @@ export default function Page() {
         Welcome to paradise.
       </p>
 
-      <Suspense fallback={<Spinner />}>
-        <CabinList />
+      <div className=" flex justify-end mb-8 ">
+        <Filter />
+      </div>
+
+      {/* We use key to bypass suspense to show loading when element gets data. Whenever the filter value changes then the fallback will be shown again whenever the component inside is suspending  */}
+      <Suspense fallback={<Spinner />} key={filter}>
+        <CabinList filter={filter} />
       </Suspense>
     </div>
   );
