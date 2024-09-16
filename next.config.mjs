@@ -10,7 +10,13 @@ const nextConfig = {
       },
     ],
   },
-  output: "export",
+  // experimental: {
+  //   staleTimes: {
+  //     dynamic: 0,
+  //     static: 180,
+  //   },
+  // },
+  // output: "export",
 };
 
 export default nextConfig;
