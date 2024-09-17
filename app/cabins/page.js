@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import CabinList from "@/app/_components/CabinList";
 import Spinner from "@/app/_components/Spinner";
 import Filter from "../_components/Filter";
+import ReservationReminder from "../_components/ReservationReminder";
 
 export const metadata = {
   title: "Cabins",
@@ -32,6 +33,7 @@ export default function Page({ searchParams }) {
       {/* We use key to bypass suspense to show loading when element gets data. Whenever the filter value changes then the fallback will be shown again whenever the component inside is suspending  */}
       <Suspense fallback={<Spinner />} key={filter}>
         <CabinList filter={filter} />
+        <ReservationReminder />
       </Suspense>
     </div>
   );
