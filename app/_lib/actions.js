@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
-import { getBookings, getCabinPrice } from "./data-service";
+import { getBookings } from "./data-service";
 import { redirect } from "next/navigation";
 
 export async function updateGuest(formData) {
@@ -28,7 +28,38 @@ export async function updateGuest(formData) {
   revalidatePath("/account/profile");
 }
 
-export async function updateReservation(formData) {
+export async function createBooking(bookingData, formData) {
+  //TODO add check reservation dates if there are avalaible like on client side
+  const session = await auth();
+  if (!session) throw new Error("You must be logged in");
+
+  //If we have huge object we can do
+  //Object.entries(formData.entries())
+  //to create object
+
+  //we can validate data using zod library
+  const newBooking = {
+    ...bookingData,
+    guestId: session.user.guestId,
+    numGuests: Number(formData.get("numGuests")),
+    observations: formData.get("observations").slice(0, 1000),
+    extrasPrice: 0,
+    totalPrice: bookingData.cabinPrice,
+    isPaid: false,
+    hasBreakfast: false,
+    status: "unconfirmed",
+  };
+
+  const { error } = await supabase.from("bookings").insert([newBooking]);
+
+  if (error) throw new Error("Booking could not be created");
+
+  revalidatePath(`/cabins/${bookingData.cabinId}`);
+
+  redirect("/cabins/thankyou");
+}
+
+export async function updateBooking(formData) {
   const bookingId = Number(formData.get("bookingId"));
 
   // 1) Authentication
@@ -70,7 +101,7 @@ export async function updateReservation(formData) {
   redirect("/account/reservations");
 }
 
-export async function deleteReservation(bookingId) {
+export async function deleteBooking(bookingId) {
   const session = await auth();
   if (!session) throw new Error("You must be logged in");
 

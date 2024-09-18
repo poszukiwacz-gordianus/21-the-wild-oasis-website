@@ -1,5 +1,5 @@
 import SubmitButton from "@/app/_components/SubmitButton";
-import { updateReservation } from "@/app/_lib/actions";
+import { updateBooking } from "@/app/_lib/actions";
 import { getBooking, getCabin } from "@/app/_lib/data-service";
 
 export const metadata = {
@@ -19,7 +19,7 @@ export default async function Page({ params: { bookingId } }) {
       </h2>
 
       <form
-        action={updateReservation}
+        action={updateBooking}
         className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col"
       >
         <div className="space-y-2">

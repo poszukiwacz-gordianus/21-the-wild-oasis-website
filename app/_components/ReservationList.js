@@ -4,7 +4,7 @@ import { useOptimistic } from "react";
 
 import ReservationCard from "@/app/_components/ReservationCard";
 
-import { deleteReservation } from "../_lib/actions";
+import { deleteBooking } from "../_lib/actions";
 
 function ReservationList({ bookings }) {
   //Two types of state: Actual state and Optimistic state
@@ -21,7 +21,7 @@ function ReservationList({ bookings }) {
 
   async function handleDelete(bookingId) {
     optimisticDelete(bookingId);
-    await deleteReservation(bookingId);
+    await deleteBooking(bookingId);
   }
 
   return (
