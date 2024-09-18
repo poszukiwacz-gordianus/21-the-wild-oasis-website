@@ -85,7 +85,7 @@ export async function getBookings(guestId) {
       "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)"
     )
     .eq("guestId", guestId)
-    .order("startDate");
+    .order("startDate", { ascending: false });
 
   if (error) {
     console.error(error);
