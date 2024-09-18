@@ -20,8 +20,7 @@ function DeleteReservation({ bookingId }) {
       className="group flex items-center gap-2 uppercase text-xs font-bold text-primary-300 flex-grow px-3 hover:bg-accent-600 transition-colors hover:text-primary-900"
     >
       {isPending ? (
-        <span>
-          {"Deleting "}
+        <span className=" mx-auto">
           <SpinnerMini />
         </span>
       ) : (

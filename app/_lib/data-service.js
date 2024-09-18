@@ -70,8 +70,10 @@ export async function getBooking(id) {
     .single();
 
   if (error) {
+    console.log("Error in get booking");
+    console.log(error);
     console.error(error);
-    throw new Error("Booking could not get loaded");
+    notFound();
   }
 
   return data;
