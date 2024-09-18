@@ -54,6 +54,7 @@ export default async function Page({ params: { bookingId } }) {
         </div>
 
         <input type="hidden" name="bookingId" defaultValue={bookingId} />
+        <input type="hidden" name="cabinId" defaultValue={cabinId} />
 
         <div className="flex justify-end items-center gap-6">
           <SubmitButton pendingLabel="Updating...">
