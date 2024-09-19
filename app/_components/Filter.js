@@ -48,7 +48,7 @@ function Filter() {
   }
 
   return (
-    <div className=" border border-primary-800 flex">
+    <div className=" border border-primary-800 flex text-sm">
       {filters.map((filter) => (
         <button
           key={filter.filter}

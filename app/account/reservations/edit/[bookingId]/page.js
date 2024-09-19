@@ -14,13 +14,13 @@ export default async function Page({ params: { bookingId } }) {
 
   return (
     <div>
-      <h2 className="font-semibold text-2xl text-accent-400 mb-7">
+      <h2 className="font-semibold text-xl text-accent-400 mb-7">
         Edit Reservation #{bookingId}
       </h2>
 
       <form
         action={updateBooking}
-        className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col"
+        className="bg-primary-900 py-6 px-10 flex gap-6 flex-col"
       >
         <div className="space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
@@ -28,7 +28,7 @@ export default async function Page({ params: { bookingId } }) {
             name="numGuests"
             id="numGuests"
             defaultValue={numGuests}
-            className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
+            className="px-4 py-2 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
             required
           >
             <option value="" key="">
@@ -49,7 +49,7 @@ export default async function Page({ params: { bookingId } }) {
           <textarea
             name="observations"
             defaultValue={observations}
-            className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
+            className="px-4 py-2 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
           />
         </div>
 

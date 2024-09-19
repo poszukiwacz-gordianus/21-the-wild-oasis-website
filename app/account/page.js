@@ -10,7 +10,7 @@ export default async function Page() {
 
   return (
     <div>
-      <h2 className="font-semibold text-2xl text-accent-400 mb-7">
+      <h2 className="font-semibold text-xl text-accent-400 mb-7">
         Welcome, {firstName}
       </h2>
     </div>

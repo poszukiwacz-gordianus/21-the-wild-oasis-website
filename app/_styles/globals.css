@@ -30,27 +30,6 @@
   }
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 0.1rem;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: theme("colors.primary.950");
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: theme("colors.accent.400");
-  border-radius: 5px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
 /* For data picker */
 .rdp {
   --rdp-cell-size: 32px !important;

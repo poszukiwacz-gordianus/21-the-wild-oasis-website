@@ -9,13 +9,11 @@ function Logo() {
       <Image
         src={logo}
         quality={100}
-        height="60"
-        width="60"
+        height="50"
+        width="50"
         alt="The Wild Oasis logo"
       />
-      <span className="text-xl font-semibold text-primary-100">
-        The Wild Oasis
-      </span>
+      <span className="font-semibold text-primary-100">The Wild Oasis</span>
     </Link>
   );
 }
