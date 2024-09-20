@@ -14,7 +14,11 @@ export async function updateGuest(formData) {
   const [nationality, countryFlag] = formData.get("nationality").split("%");
 
   if (!/^[a-zA-Z0-9]{6,12}$/.test(nationalID))
-    throw new Error("Please provide a valid national ID");
+    return {
+      error: "Profile could not be updated",
+      validationFail: "Please provide a valid national ID",
+    };
+  // throw new Error("Please provide a valid national ID");
 
   const updateData = { nationality, countryFlag, nationalID };
 
@@ -23,7 +27,7 @@ export async function updateGuest(formData) {
     .update(updateData)
     .eq("id", session.user.guestId);
 
-  if (error) throw new Error("Guest could not be updated");
+  if (error) return { error: "Profile could not be updated" };
 
   revalidatePath("/account/profile");
 }
@@ -52,7 +56,7 @@ export async function createBooking(bookingData, formData) {
 
   const { error } = await supabase.from("bookings").insert([newBooking]);
 
-  if (error) throw new Error("Booking could not be created");
+  if (error) return { error: "Booking could not be created" };
 
   revalidatePath(`/cabins/${bookingData.cabinId}`);
 
@@ -91,12 +95,13 @@ export async function updateBooking(formData) {
   // 5) Error handling
   if (error) {
     console.error(error);
-    throw new Error("Booking could not be updated");
+    return { error: "Booking could not be updated" };
   }
 
   // 6) Revalidate cache
   revalidatePath("/account/reservations");
   revalidatePath(`/account/reservations/edit/${bookingId}`);
+
   // 7) Redirecting
   redirect("/account/reservations");
 }
@@ -116,7 +121,7 @@ export async function deleteBooking(bookingId) {
     .delete()
     .eq("id", bookingId);
 
-  if (error) throw new Error("Booking could not be deleted");
+  if (error) return { error: "Booking could not be deleted" };
 
   revalidatePath("/account/reservations");
 }

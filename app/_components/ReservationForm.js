@@ -5,6 +5,7 @@ import { useReservation } from "./ReservationContext";
 import { differenceInDays } from "date-fns";
 import { createBooking } from "../_lib/actions";
 import SubmitButton from "./SubmitButton";
+import toast from "react-hot-toast";
 
 function ReservationForm({ cabin, user }) {
   const { range, resetRange } = useReservation();
@@ -52,8 +53,9 @@ function ReservationForm({ cabin, user }) {
       <form
         // action={createBookingWithData}
         action={async (formData) => {
-          await createBookingWithData(formData);
-          resetRange();
+          const isError = await createBookingWithData(formData);
+          if (isError) toast.error(isError.error);
+          else resetRange();
         }}
         className="bg-primary-900 py-10 px-16 flex gap-5 flex-col min-h-[350px]"
       >

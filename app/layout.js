@@ -5,6 +5,7 @@ import { ReservationProvider } from "./_components/ReservationContext";
 import { Josefin_Sans } from "next/font/google";
 
 import "@/app/_styles/globals.css";
+import { Toaster } from "react-hot-toast";
 
 const josefinFont = Josefin_Sans({
   subsets: ["latin"],
@@ -27,6 +28,19 @@ export default function RootLayout({ children }) {
       <body
         className={`${josefinFont.className} bg-primary-950 text-primary-100 min-h-screen flex flex-col antialiased relative`}
       >
+        <Toaster
+          position="bottom-right"
+          reverseOrder={true}
+          toastOptions={{
+            success: { duration: 3000 },
+            error: { duration: 5000 },
+            style: {
+              backgroundColor: "#1B2631",
+              fontSize: "1rem",
+              color: "#D4DEE7",
+            },
+          }}
+        />
         <Header />
 
         <div className="flex-1 px-8 py-12 grid">

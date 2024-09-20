@@ -37,9 +37,9 @@ function DateSelector({ settings, cabin, bookedDates }) {
       <DayPicker
         className="pt-10 place-self-center"
         mode="range"
-        onSelect={(e) => {
-          if (!e) resetRange();
-          else setRange(e);
+        onSelect={(range) => {
+          if (!range) resetRange();
+          else setRange(range);
         }}
         selected={displayedRange}
         min={minBookingLength + 1}
