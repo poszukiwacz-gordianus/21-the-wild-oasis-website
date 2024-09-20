@@ -42,19 +42,27 @@ export async function createBooking(bookingData, formData) {
   //to create object
 
   //we can validate data using zod library
+  const breakfast = formData.get("hasBreakfast") === "true" ? true : false;
+  const extraPrice = breakfast
+    ? bookingData.hasBreakfast *
+      Number(formData.get("numGuests")) *
+      bookingData.numNights
+    : 0;
+
   const newBooking = {
     ...bookingData,
     guestId: session.user.guestId,
     numGuests: Number(formData.get("numGuests")),
     observations: formData.get("observations").slice(0, 1000),
-    extrasPrice: 0,
-    totalPrice: bookingData.cabinPrice,
+    extrasPrice: extraPrice,
+    totalPrice: bookingData.cabinPrice + extraPrice,
     isPaid: false,
-    hasBreakfast: false,
+    hasBreakfast: breakfast,
     status: "unconfirmed",
   };
 
   const { error } = await supabase.from("bookings").insert([newBooking]);
+  console.log(error);
 
   if (error) return { error: "Booking could not be created" };
 

@@ -21,13 +21,17 @@ function isAlreadyBooked(range, datesArr) {
 }
 
 function DateSelector({ settings, cabin, bookedDates }) {
-  const { range, setRange, resetRange } = useReservation();
+  const { range, setRange, resetRange, breakfastPrice, guestsNumber } =
+    useReservation();
 
   const displayedRange = isAlreadyBooked(range, bookedDates) ? {} : range;
 
   const { regularPrice, discount } = cabin;
-  const numNights = differenceInDays(displayedRange.to, displayedRange.from);
-  const cabinPrice = numNights * (regularPrice - discount);
+  const numNights =
+    differenceInDays(displayedRange.to, displayedRange.from) || 0;
+  const cabinPrice =
+    numNights * (regularPrice - discount) +
+    breakfastPrice * guestsNumber * numNights;
 
   // SETTINGS
   const { minBookingLength, maxBookingLength } = settings;
@@ -35,7 +39,7 @@ function DateSelector({ settings, cabin, bookedDates }) {
   return (
     <div className="flex flex-col justify-between">
       <DayPicker
-        className="pt-10 place-self-center"
+        className="place-self-center h-full content-center"
         mode="range"
         onSelect={(range) => {
           if (!range) resetRange();
@@ -60,13 +64,17 @@ function DateSelector({ settings, cabin, bookedDates }) {
           <p className="flex gap-2 items-baseline">
             {discount > 0 ? (
               <>
-                <span className="text-2xl">${regularPrice - discount}</span>
+                <span className="text-2xl">
+                  ${regularPrice - discount + breakfastPrice * guestsNumber}
+                </span>
                 <span className="line-through font-semibold text-primary-700">
                   ${regularPrice}
                 </span>
               </>
             ) : (
-              <span className="text-2xl">${regularPrice}</span>
+              <span className="text-2xl">
+                ${regularPrice + breakfastPrice * guestsNumber}
+              </span>
             )}
             <span className="">/night</span>
           </p>

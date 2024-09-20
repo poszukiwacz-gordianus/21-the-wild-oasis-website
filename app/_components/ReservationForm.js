@@ -7,8 +7,9 @@ import { createBooking } from "../_lib/actions";
 import SubmitButton from "./SubmitButton";
 import toast from "react-hot-toast";
 
-function ReservationForm({ cabin, user }) {
-  const { range, resetRange } = useReservation();
+function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
+  const { range, resetRange, setBreakfastPrice, setGuestsNumber } =
+    useReservation();
 
   const { maxCapacity, regularPrice, discount, id } = cabin;
 
@@ -24,6 +25,7 @@ function ReservationForm({ cabin, user }) {
     numNights,
     cabinPrice,
     cabinId: id,
+    hasBreakfast: breakfastPrice,
   };
 
   //We use bind to set additional data
@@ -57,13 +59,14 @@ function ReservationForm({ cabin, user }) {
           if (isError) toast.error(isError.error);
           else resetRange();
         }}
-        className="bg-primary-900 py-10 px-16 flex gap-5 flex-col min-h-[350px]"
+        className="bg-primary-900 py-5 px-16 flex gap-5 flex-col"
       >
         <div className="space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select
             name="numGuests"
             id="numGuests"
+            onChange={(e) => setGuestsNumber(Number(e.target.value))}
             className="px-4 py-2 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
             required
           >
@@ -79,6 +82,25 @@ function ReservationForm({ cabin, user }) {
         </div>
 
         <div className="space-y-2">
+          <label htmlFor="hasBreakfast">
+            Would you like to add a breakfast package to your reservation for $
+            {breakfastPrice} per person per day?
+          </label>
+          <select
+            name="hasBreakfast"
+            id="hasBreakfast"
+            onChange={(e) =>
+              setBreakfastPrice(e.target.value === "true" ? breakfastPrice : 0)
+            }
+            className="px-4 py-2 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
+            defaultValue={false}
+          >
+            <option value={false}>No</option>
+            <option value={true}>Yes</option>
+          </select>
+        </div>
+
+        <div className="space-y-2">
           <label htmlFor="observations">
             Anything we should know about your stay?
           </label>
@@ -90,9 +112,9 @@ function ReservationForm({ cabin, user }) {
           />
         </div>
 
-        <div className="flex justify-end items-center gap-6">
+        <div className="flex justify-end gap-6">
           {!(startDate && endDate) ? (
-            <p className="text-primary-300 text-base">
+            <p className="text-primary-300 text-lg px-8 py-4">
               Start by selecting dates
             </p>
           ) : (
