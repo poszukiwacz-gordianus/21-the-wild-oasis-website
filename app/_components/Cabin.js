@@ -29,7 +29,7 @@ function Cabin({
     <div className="flex">
       <div className="flex justify-center items-center">
         <Link
-          href={`/cabins/${next}`}
+          href={`/cabins/${prev}`}
           className="h-24 w-24  hover:text-accent-500"
         >
           <ChevronLeftIcon />
