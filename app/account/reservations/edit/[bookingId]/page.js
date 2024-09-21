@@ -1,15 +1,16 @@
 import UpdateReservationForm from "@/app/_components/UpdateReservationForm";
-import { getBooking, getCabin } from "@/app/_lib/data-service";
+import { getBooking, getCabin, getSettings } from "@/app/_lib/data-service";
 
 export const metadata = {
   title: "Update Reservation",
 };
 
 export default async function Page({ params: { bookingId } }) {
-  const { cabinId, numGuests, observations } = await getBooking(
+  const { cabinId, numGuests, observations, hasBreakfast } = await getBooking(
     Number(bookingId)
   );
   const { maxCapacity } = await getCabin(cabinId);
+  const { breakfastPrice } = await getSettings();
 
   return (
     <div>
@@ -24,6 +25,8 @@ export default async function Page({ params: { bookingId } }) {
           observations,
           maxCapacity,
           bookingId,
+          hasBreakfast,
+          breakfastPrice,
         }}
       />
     </div>

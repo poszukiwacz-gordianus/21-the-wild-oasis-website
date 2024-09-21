@@ -11,6 +11,8 @@ function UpdateReservationForm({
     observations,
     maxCapacity,
     bookingId,
+    hasBreakfast,
+    breakfastPrice,
   },
 }) {
   return (
@@ -39,6 +41,23 @@ function UpdateReservationForm({
               {x} {x === 1 ? "guest" : "guests"}
             </option>
           ))}
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="updateBreakfast">
+          {hasBreakfast
+            ? "Do you want to remove breakfast from your reservation?"
+            : `Do you want to add breakfast for $${breakfastPrice} per person per night, to your reservation?`}
+        </label>
+        <select
+          name="updateBreakfast"
+          id="updateBreakfast"
+          defaultValue={"false"}
+          className="px-4 py-2 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
+        >
+          <option value="false">No</option>
+          <option value="true">Yes</option>
         </select>
       </div>
 

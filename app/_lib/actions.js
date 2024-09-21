@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
-import { getBookings } from "./data-service";
+import { getBooking, getBookings, getSettings } from "./data-service";
 import { redirect } from "next/navigation";
 
 export async function updateGuest(formData) {
@@ -73,6 +73,10 @@ export async function createBooking(bookingData, formData) {
 
 export async function updateBooking(formData) {
   const bookingId = Number(formData.get("bookingId"));
+  const { hasBreakfast, totalPrice, extrasPrice, numNights } = await getBooking(
+    bookingId
+  );
+  const { breakfastPrice } = await getSettings();
 
   // 1) Authentication
   const session = await auth();
@@ -87,10 +91,31 @@ export async function updateBooking(formData) {
 
   // 5) Building update data
 
-  const updateData = {
+  let extraPrice = extrasPrice;
+  let updateData = {
     numGuests: Number(formData.get("numGuests")),
     observations: formData.get("observations").slice(0, 1000),
+    hasBreakfast:
+      formData.get("updateBreakfast") === "true" ? !hasBreakfast : hasBreakfast,
   };
+
+  if (formData.get("updateBreakfast") === "true" && !hasBreakfast) {
+    extraPrice = breakfastPrice * Number(formData.get("numGuests")) * numNights;
+
+    updateData = {
+      ...updateData,
+      extrasPrice: extraPrice,
+      totalPrice: totalPrice + extraPrice,
+    };
+  }
+
+  if (formData.get("updateBreakfast") === "true" && hasBreakfast) {
+    updateData = {
+      ...updateData,
+      extrasPrice: 0,
+      totalPrice: totalPrice - extrasPrice,
+    };
+  }
 
   // 4) Mutation
   const { error } = await supabase
