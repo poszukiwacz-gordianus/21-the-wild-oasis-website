@@ -38,7 +38,11 @@ function ReservationCard({ booking, onDelete }) {
           <h3 className="font-semibold">
             {numNights} nights in Cabin {name}
           </h3>
-          {isPast(new Date(startDate)) ? (
+          {isPast(new Date(startDate)) && !isPast(new Date(endDate)) ? (
+            <span className="bg-blue-800 text-yellow-200 h-7 px-3 uppercase text-xs font-bold flex items-center rounded-sm">
+              current
+            </span>
+          ) : isPast(new Date(startDate)) ? (
             <span className="bg-yellow-800 text-yellow-200 h-7 px-3 uppercase text-xs font-bold flex items-center rounded-sm">
               past
             </span>

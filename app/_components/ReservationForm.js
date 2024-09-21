@@ -13,8 +13,29 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
 
   const { maxCapacity, regularPrice, discount, id } = cabin;
 
-  const startDate = range.from;
-  const endDate = range.to;
+  // We need to convert date type to another to filter bookings correct
+  const from = range.from;
+  const to = range.to;
+
+  let y = new Date(from);
+  let x = new Date(to);
+
+  let startDate;
+  let endDate;
+
+  // Check if the date is valid
+  if (isNaN(y) || isNaN(x)) {
+    startDate = y;
+    endDate = x;
+  } else {
+    // Set the time to midnight (00:00:00) in UTC
+    y.setUTCHours(0, 0, 0, 0);
+    x.setUTCHours(0, 0, 0, 0);
+
+    // Convert to ISO string (with time at 00:00:00 UTC)
+    startDate = y.toISOString();
+    endDate = x.toISOString();
+  }
 
   const numNights = differenceInDays(endDate, startDate);
   const cabinPrice = numNights * (regularPrice - discount);

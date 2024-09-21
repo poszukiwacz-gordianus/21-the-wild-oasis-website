@@ -71,7 +71,6 @@ export async function getBooking(id) {
 
   if (error) {
     console.log("Error in get booking");
-    console.log(error);
     console.error(error);
     notFound();
   }
@@ -95,6 +94,47 @@ export async function getBookings(guestId) {
   }
 
   return data;
+}
+
+export async function getCurrentBooking(guestId) {
+  let today = new Date();
+  today.setUTCHours(0, 0, 0, 0); // Set today's date to midnight UTC
+  today = today.toISOString(); // Convert to 'YYYY-MM-DD' format
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("startDate, endDate, status, numGuests, cabins(name)")
+    .eq("guestId", Number(guestId))
+    .filter("startDate::date", "lte", today) // Compare only the date part of startDate
+    .filter("endDate::date", "gte", today); // Compare only the date part of endDate
+
+  if (error) {
+    console.error("Error retrieving booking:", error);
+  }
+
+  return data.at(0);
+}
+
+export async function getClosestBooking(guestId) {
+  let today = new Date();
+  today.setUTCHours(0, 0, 0, 0); // Set today's date to midnight UTC
+  today = today.toISOString(); // Convert to 'YYYY-MM-DD' format
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .select(
+      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)"
+    )
+    .eq("guestId", guestId)
+    .gt("endDate", today) // Ensure we only consider upcoming or ongoing bookings
+    .order("startDate", { ascending: true }) // Closest startDate in the future
+    .limit(1);
+
+  if (error) {
+    console.error("Error:", error);
+  }
+
+  return data.at(0);
 }
 
 export async function getBookedDatesByCabinId(cabinId) {
