@@ -17,12 +17,13 @@ function Cabin({
   cabin: { id, name, image, description, maxCapacity },
   cabins,
 }) {
-  const curIndex = cabins.findIndex((cabin) => cabin.id === id);
+  // Navigation previus cabin, next cabin
+  const index = cabins.findIndex((cabin) => cabin.id === id);
 
-  let next = cabins[curIndex + 1]?.id;
+  let next = cabins[index + 1]?.id;
   if (!next) next = cabins[0].id;
 
-  let prev = cabins[curIndex - 1]?.id;
+  let prev = cabins[index - 1]?.id;
   if (!prev) prev = cabins[cabins.length - 1].id;
 
   return (

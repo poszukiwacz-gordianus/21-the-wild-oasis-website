@@ -8,6 +8,7 @@ import {
 } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+
 import { useReservation } from "./ReservationContext";
 
 function isAlreadyBooked(range, datesArr) {
@@ -20,7 +21,7 @@ function isAlreadyBooked(range, datesArr) {
   );
 }
 
-function DateSelector({ settings, cabin, bookedDates }) {
+function DateSelector({ settings, cabin, bookedDates, bookedDatesByGuest }) {
   const { range, setRange, resetRange, breakfastPrice, guestsNumber } =
     useReservation();
 
@@ -55,7 +56,8 @@ function DateSelector({ settings, cabin, bookedDates }) {
         numberOfMonths={2}
         disabled={(curDate) =>
           isPast(curDate) ||
-          bookedDates.some((date) => isSameDay(date, curDate))
+          bookedDates.some((date) => isSameDay(date, curDate)) ||
+          bookedDatesByGuest.some((date) => isSameDay(date, curDate))
         }
       />
 

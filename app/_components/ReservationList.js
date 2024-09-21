@@ -1,11 +1,9 @@
 "use client";
 
 import { useOptimistic } from "react";
-
-import ReservationCard from "@/app/_components/ReservationCard";
-
-import { deleteBooking } from "../_lib/actions";
 import toast from "react-hot-toast";
+import ReservationCard from "@/app/_components/ReservationCard";
+import { deleteBooking } from "../_lib/actions";
 
 function ReservationList({ bookings }) {
   //Two types of state: Actual state and Optimistic state

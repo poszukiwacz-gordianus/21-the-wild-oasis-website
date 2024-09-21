@@ -3,8 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
-import { getBooking, getBookings, getSettings } from "./data-service";
+import {
+  getBookedDatesByCabinId,
+  getBooking,
+  getBookings,
+  getSettings,
+} from "./data-service";
 import { redirect } from "next/navigation";
+import { isWithinInterval } from "date-fns";
 
 export async function updateGuest(formData) {
   const session = await auth();
@@ -18,7 +24,6 @@ export async function updateGuest(formData) {
       error: "Profile could not be updated",
       validationFail: "Please provide a valid national ID",
     };
-  // throw new Error("Please provide a valid national ID");
 
   const updateData = { nationality, countryFlag, nationalID };
 
@@ -33,7 +38,20 @@ export async function updateGuest(formData) {
 }
 
 export async function createBooking(bookingData, formData) {
-  //TODO add check reservation dates if there are avalaible like on client side
+  //Check on server side if dates are already booked
+  function isAlreadyBooked(from, to, datesArr) {
+    return (
+      from &&
+      to &&
+      datesArr.some((date) => isWithinInterval(date, { start: from, end: to }))
+    );
+  }
+
+  const bookedDates = await getBookedDatesByCabinId(bookingData.cabinId);
+
+  if (isAlreadyBooked(bookingData.startDate, bookingData.endDate, bookedDates))
+    return { error: "Dates are already booked!" };
+
   const session = await auth();
   if (!session) throw new Error("You must be logged in");
 
@@ -60,8 +78,6 @@ export async function createBooking(bookingData, formData) {
     hasBreakfast: breakfast,
     status: "unconfirmed",
   };
-
-  console.log(newBooking);
 
   const { error } = await supabase.from("bookings").insert([newBooking]);
 

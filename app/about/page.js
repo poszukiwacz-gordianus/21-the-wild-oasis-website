@@ -59,14 +59,6 @@ export default async function Page() {
           quality={80}
         />
       </div>
-      {/* <div className=" relative aspect-square col-span-2">
-        <Image
-          src="/about-2.jpg"
-          fill
-          className=" object-cover"
-          alt="Family that manages The Wild Oasis"
-        />
-      </div> */}
 
       <div className="col-span-3">
         <h1 className="text-3xl mb-10 text-accent-400 font-medium">

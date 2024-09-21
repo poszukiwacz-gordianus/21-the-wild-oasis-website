@@ -1,11 +1,9 @@
-import Header from "./_components/Header";
-
-import { ReservationProvider } from "./_components/ReservationContext";
-
-import { Josefin_Sans } from "next/font/google";
-
-import "@/app/_styles/globals.css";
 import { Toaster } from "react-hot-toast";
+import { Josefin_Sans } from "next/font/google";
+import "@/app/_styles/globals.css";
+
+import Header from "./_components/Header";
+import { ReservationProvider } from "./_components/ReservationContext";
 
 const josefinFont = Josefin_Sans({
   subsets: ["latin"],

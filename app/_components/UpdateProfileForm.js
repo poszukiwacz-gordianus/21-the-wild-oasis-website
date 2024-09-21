@@ -1,7 +1,8 @@
 "use client";
 
-import toast from "react-hot-toast";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import Image from "next/image";
 
 import SubmitButton from "./SubmitButton";
 import { updateGuest } from "../_lib/actions";
@@ -47,11 +48,14 @@ function UpdateProfileForm({ guest, children }) {
         <div className="flex items-center justify-between">
           <label htmlFor="nationality">Where are you from?</label>
           {countryFlag && (
-            <img
-              src={countryFlag}
-              alt="Country flag"
-              className="h-5 rounded-sm"
-            />
+            <div className="relative aspect-video h-5">
+              <Image
+                fill
+                src={countryFlag}
+                alt="Country flag"
+                className="rounded-sm object-cover"
+              />
+            </div>
           )}
         </div>
 

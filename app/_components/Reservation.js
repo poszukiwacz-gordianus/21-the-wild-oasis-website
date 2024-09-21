@@ -1,23 +1,30 @@
+import { auth } from "../_lib/auth";
+
 import DateSelector from "./DateSelector";
 import ReservationForm from "./ReservationForm";
 import LoginMessage from "./LoginMessage";
 
-import { getBookedDatesByCabinId, getSettings } from "../_lib/data-service";
-import { auth } from "../_lib/auth";
+import {
+  getBookedDatesByCabinId,
+  getBookedDatesByUserId,
+  getSettings,
+} from "../_lib/data-service";
 
 async function Reservation({ cabin }) {
-  const [settings, bookedDates] = await Promise.all([
+  const session = await auth();
+
+  const [settings, bookedDates, bookedDatesByGuest] = await Promise.all([
     getSettings(),
     getBookedDatesByCabinId(Number(cabin.id)),
+    getBookedDatesByUserId(Number(session.user.guestId)),
   ]);
-
-  const session = await auth();
 
   return (
     <div className=" grid grid-cols-2 border border-primary-800 min-h-[400px]">
       <DateSelector
         settings={settings}
         bookedDates={bookedDates}
+        bookedDatesByGuest={bookedDatesByGuest}
         cabin={cabin}
       />
       {session?.user ? (

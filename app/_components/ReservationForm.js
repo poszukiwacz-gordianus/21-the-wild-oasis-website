@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useReservation } from "./ReservationContext";
-import { differenceInDays } from "date-fns";
-import { createBooking } from "../_lib/actions";
-import SubmitButton from "./SubmitButton";
 import toast from "react-hot-toast";
+import { differenceInDays } from "date-fns";
+
+import SubmitButton from "./SubmitButton";
+
+import { useReservation } from "./ReservationContext";
+import { createBooking } from "../_lib/actions";
 
 function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
   const { range, resetRange, setBreakfastPrice, setGuestsNumber } =
@@ -74,7 +76,6 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
       </div>
 
       <form
-        // action={createBookingWithData}
         action={async (formData) => {
           const isError = await createBookingWithData(formData);
           if (isError) toast.error(isError.error);

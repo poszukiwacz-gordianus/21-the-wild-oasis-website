@@ -167,6 +167,36 @@ export async function getBookedDatesByCabinId(cabinId) {
   return bookedDates;
 }
 
+export async function getBookedDatesByUserId(guestId) {
+  let today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  today = today.toISOString();
+
+  // Getting all bookings
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("guestId", guestId)
+    .or(`startDate.gte.${today},status.eq.checked-in`);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not get loaded");
+  }
+
+  // Converting to actual dates to be displayed in the date picker
+  const bookedDates = data
+    .map((booking) => {
+      return eachDayOfInterval({
+        start: new Date(booking.startDate),
+        end: new Date(booking.endDate),
+      });
+    })
+    .flat();
+
+  return bookedDates;
+}
+
 export async function getSettings() {
   const { data, error } = await supabase.from("settings").select("*").single();
 
@@ -203,69 +233,3 @@ export async function createGuest(newGuest) {
 
   return data;
 }
-/*
-export async function createBooking(newBooking) {
-  const { data, error } = await supabase
-    .from("bookings")
-    .insert([newBooking])
-    // So that the newly created object gets returned!
-    .select()
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be created");
-  }
-
-  return data;
-}*/
-
-/////////////
-// UPDATE
-
-/*
-// The updatedFields is an object which should ONLY contain the updated data
-export async function updateGuest(id, updatedFields) {
-  const { data, error } = await supabase
-    .from("guests")
-    .update(updatedFields)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Guest could not be updated");
-  }
-  return data;
-}
-  
-
-export async function updateBooking(id, updatedFields) {
-  const { data, error } = await supabase
-    .from("bookings")
-    .update(updatedFields)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be updated");
-  }
-  return data;
-}
-
-/////////////
-// DELETE
-
-export async function deleteBooking(id) {
-  const { data, error } = await supabase.from("bookings").delete().eq("id", id);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be deleted");
-  }
-  return data;
-}
-*/
