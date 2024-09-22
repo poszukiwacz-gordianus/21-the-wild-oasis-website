@@ -21,24 +21,7 @@ export async function generateStaticParams() {
   return ids;
 }
 
-export async function getStaticProps({ params }) {
-  const { cabinId } = params; // Get the dynamic cabinId from params
-
-  const cabin = await getCabin(cabinId); // Fetch data based on the cabinId
-
-  if (!cabin) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      cabin,
-    },
-    revalidate: 60, // Revalidate every 60 seconds
-  };
-}
+export const revalidate = 60;
 
 export default async function Page({ params: { cabinId } }) {
   const cabin = await getCabin(Number(cabinId));
