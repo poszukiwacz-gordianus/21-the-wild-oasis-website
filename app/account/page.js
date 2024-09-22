@@ -1,4 +1,4 @@
-import { differenceInDays, format, isToday } from "date-fns";
+import { differenceInDays, format, isPast, isToday } from "date-fns";
 import { auth } from "../_lib/auth";
 import { getClosestBooking, getCurrentBooking } from "../_lib/data-service";
 import { formatDistanceFromNow } from "../_components/ReservationCard";
@@ -79,8 +79,10 @@ export default async function Page() {
       )}
       {currentBooking?.status === "unconfirmed" && (
         <p className="border border-primary-800 px-8 py-6">
-          We&apos;re waiting for your todays arrival. You can check-in from 6PM
-          to 11PM
+          {isPast(new Date(booking?.startDate))
+            ? `Hello, we hope everything is okay. We noticed that you have not checked in to the cabin and the check-in date has passed. If you need to cancel your reservation, please contact us at +56 876 34 23 or email us at thewildoasis@email.com. We look forward to hearing from you.`
+            : `We&apos;re waiting for your todays arrival. You can check-in from 6PM
+          to 11PM`}
         </p>
       )}
       {currentBooking?.status === "checked-out" && (
