@@ -30,13 +30,17 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
     startDate = y;
     endDate = x;
   } else {
-    // Set the time to midnight (00:00:00) in UTC
+    // Add one day (if needed) and work in UTC
+    y.setUTCDate(y.getUTCDate() + 1); // Use UTC to add one day
+    x.setUTCDate(x.getUTCDate() + 1); // Use UTC to add one day
+
+    // Set the time to midnight in UTC
     y.setUTCHours(0, 0, 0, 0);
     x.setUTCHours(0, 0, 0, 0);
 
     // Convert to ISO string (with time at 00:00:00 UTC)
-    startDate = y.toISOString();
-    endDate = x.toISOString();
+    startDate = y.toISOString().split("T")[0] + "T00:00:00.000Z";
+    endDate = x.toISOString().split("T")[0] + "T00:00:00.000Z";
   }
 
   const numNights = differenceInDays(endDate, startDate);
@@ -78,8 +82,10 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
       <form
         action={async (formData) => {
           const isError = await createBookingWithData(formData);
-          if (isError) toast.error(isError.error);
-          else resetRange();
+          if (isError) {
+            toast.error(isError.error);
+          }
+          resetRange();
         }}
         className="bg-primary-900 py-5 px-16 flex gap-5 flex-col"
       >

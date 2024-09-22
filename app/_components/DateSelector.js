@@ -10,6 +10,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
 import { useReservation } from "./ReservationContext";
+import { useEffect } from "react";
 
 function isAlreadyBooked(range, datesArr) {
   return (
@@ -22,8 +23,18 @@ function isAlreadyBooked(range, datesArr) {
 }
 
 function DateSelector({ settings, cabin, bookedDates, bookedDatesByGuest }) {
-  const { range, setRange, resetRange, breakfastPrice, guestsNumber } =
-    useReservation();
+  const {
+    range,
+    setRange,
+    resetRange,
+    breakfastPrice,
+    setBreakfastPrice,
+    guestsNumber,
+  } = useReservation();
+
+  useEffect(() => {
+    setBreakfastPrice(0);
+  }, [setBreakfastPrice]);
 
   const displayedRange = isAlreadyBooked(range, bookedDates) ? {} : range;
 

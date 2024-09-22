@@ -38,6 +38,9 @@ export async function updateGuest(formData) {
 }
 
 export async function createBooking(bookingData, formData) {
+  const session = await auth();
+  if (!session) throw new Error("You must be logged in");
+
   //Check on server side if dates are already booked
   function isAlreadyBooked(from, to, datesArr) {
     return (
@@ -49,11 +52,15 @@ export async function createBooking(bookingData, formData) {
 
   const bookedDates = await getBookedDatesByCabinId(bookingData.cabinId);
 
-  if (isAlreadyBooked(bookingData.startDate, bookingData.endDate, bookedDates))
-    return { error: "Dates are already booked!" };
-
-  const session = await auth();
-  if (!session) throw new Error("You must be logged in");
+  if (
+    isAlreadyBooked(bookingData.startDate, bookingData.endDate, bookedDates)
+  ) {
+    revalidatePath(`/cabins/${bookingData.cabinId}`);
+    return {
+      error:
+        "Oops, looks like someone else beat you to it! These dates are already reserved. Why not try a different date?",
+    };
+  }
 
   //If we have huge object we can do
   //Object.entries(formData.entries())
