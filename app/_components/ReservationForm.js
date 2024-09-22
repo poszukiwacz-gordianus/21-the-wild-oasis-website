@@ -84,6 +84,9 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
           const isError = await createBookingWithData(formData);
           if (isError) {
             toast.error(isError.error);
+          } else {
+            setBreakfastPrice(0);
+            setGuestsNumber(0);
           }
           resetRange();
         }}

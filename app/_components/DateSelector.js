@@ -30,11 +30,13 @@ function DateSelector({ settings, cabin, bookedDates, bookedDatesByGuest }) {
     breakfastPrice,
     setBreakfastPrice,
     guestsNumber,
+    setGuestsNumber,
   } = useReservation();
 
   useEffect(() => {
     setBreakfastPrice(0);
-  }, [setBreakfastPrice]);
+    setGuestsNumber(0);
+  }, [setBreakfastPrice, setGuestsNumber]);
 
   const displayedRange = isAlreadyBooked(range, bookedDates) ? {} : range;
 
