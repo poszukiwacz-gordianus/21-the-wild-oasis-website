@@ -11,15 +11,34 @@ export async function generateMetadata({ params: { cabinId } }) {
   return { title: `Cabin ${name}` };
 }
 
-// export async function generateStaticParams() {
-//   const cabins = await getCabins();
+export async function generateStaticParams() {
+  const cabins = await getCabins();
 
-//   const ids = cabins.map((cabin) => ({
-//     cabinId: String(cabin.id),
-//   }));
+  const ids = cabins.map((cabin) => ({
+    cabinId: String(cabin.id),
+  }));
 
-//   return ids;
-// }
+  return ids;
+}
+
+export async function getStaticProps({ params }) {
+  const { cabinId } = params; // Get the dynamic cabinId from params
+
+  const cabin = await getCabin(cabinId); // Fetch data based on the cabinId
+
+  if (!cabin) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      cabin,
+    },
+    revalidate: 60, // Revalidate every 60 seconds
+  };
+}
 
 export default async function Page({ params: { cabinId } }) {
   const cabin = await getCabin(Number(cabinId));
