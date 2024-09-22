@@ -13,10 +13,11 @@ import {
 async function Reservation({ cabin }) {
   const session = await auth();
 
-  const [settings, bookedDates, bookedDatesByGuest] = await Promise.all([
+  const [settings, bookedDates, bookedDatesByGuest = []] = await Promise.all([
     getSettings(),
     getBookedDatesByCabinId(Number(cabin.id)),
-    getBookedDatesByUserId(Number(session.user.guestId)),
+    session?.user?.guestId &&
+      getBookedDatesByUserId(Number(session?.user?.guestId)),
   ]);
 
   return (
