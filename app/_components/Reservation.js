@@ -13,19 +13,22 @@ import {
 async function Reservation({ cabin }) {
   const session = await auth();
 
-  const [settings, bookedDates, bookedDatesByGuest = []] = await Promise.all([
-    getSettings(),
-    getBookedDatesByCabinId(Number(cabin.id)),
-    session?.user?.guestId &&
-      getBookedDatesByUserId(Number(session?.user?.guestId)),
-  ]);
+  const [settings, bookedDatesAll, bookedDatesByGuest = []] = await Promise.all(
+    [
+      getSettings(),
+      getBookedDatesByCabinId(Number(cabin.id)),
+      session?.user?.guestId &&
+        getBookedDatesByUserId(Number(session?.user?.guestId)),
+    ]
+  );
+
+  const bookedDates = [...bookedDatesAll, ...bookedDatesByGuest];
 
   return (
     <div className=" grid grid-cols-2 border border-primary-800 min-h-[400px]">
       <DateSelector
         settings={settings}
         bookedDates={bookedDates}
-        bookedDatesByGuest={bookedDatesByGuest}
         cabin={cabin}
       />
       {session?.user ? (
@@ -33,6 +36,7 @@ async function Reservation({ cabin }) {
           cabin={cabin}
           user={session.user}
           settings={settings}
+          bookedDates={bookedDates}
         />
       ) : (
         <LoginMessage />

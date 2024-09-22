@@ -12,7 +12,7 @@ import "react-day-picker/dist/style.css";
 import { useReservation } from "./ReservationContext";
 import { useEffect } from "react";
 
-function isAlreadyBooked(range, datesArr) {
+export function isAlreadyBooked(range, datesArr) {
   return (
     range.from &&
     range.to &&
@@ -22,7 +22,7 @@ function isAlreadyBooked(range, datesArr) {
   );
 }
 
-function DateSelector({ settings, cabin, bookedDates, bookedDatesByGuest }) {
+function DateSelector({ settings, cabin, bookedDates }) {
   const {
     range,
     setRange,
@@ -57,6 +57,7 @@ function DateSelector({ settings, cabin, bookedDates, bookedDatesByGuest }) {
         mode="range"
         onSelect={(range) => {
           if (!range) resetRange();
+          if (isAlreadyBooked(range, bookedDates)) resetRange();
           else setRange(range);
         }}
         selected={displayedRange}
@@ -69,8 +70,7 @@ function DateSelector({ settings, cabin, bookedDates, bookedDatesByGuest }) {
         numberOfMonths={2}
         disabled={(curDate) =>
           isPast(curDate) ||
-          bookedDates.some((date) => isSameDay(date, curDate)) ||
-          bookedDatesByGuest.some((date) => isSameDay(date, curDate))
+          bookedDates.some((date) => isSameDay(date, curDate))
         }
       />
 

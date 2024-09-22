@@ -2,18 +2,28 @@
 
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, isSameDay } from "date-fns";
 
 import SubmitButton from "./SubmitButton";
 
 import { useReservation } from "./ReservationContext";
 import { createBooking } from "../_lib/actions";
+import { useEffect, useState } from "react";
+import { isAlreadyBooked } from "./DateSelector";
 
-function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
+function ReservationForm({
+  cabin,
+  user,
+  settings: { breakfastPrice },
+  bookedDates,
+}) {
   const { range, resetRange, setBreakfastPrice, setGuestsNumber } =
     useReservation();
 
   const { maxCapacity, regularPrice, discount, id } = cabin;
+
+  // In Reservation component
+  const [reserveButtonDisabled, setReserveButtonDisabled] = useState(false);
 
   // We need to convert date type to another to filter bookings correct
   const from = range.from;
@@ -57,6 +67,13 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
 
   //We use bind to set additional data
   const createBookingWithData = createBooking.bind(null, bookingData);
+
+  useEffect(() => {
+    function isReservedButtonEnabled() {
+      return !!(from && to) && !isAlreadyBooked(range, bookedDates);
+    }
+    setReserveButtonDisabled(isReservedButtonEnabled);
+  }, [from, to, bookedDates, range, reserveButtonDisabled]);
 
   return (
     <div className="scale-[1.01]">
@@ -144,12 +161,12 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
         </div>
 
         <div className="flex justify-end gap-6">
-          {!(from && to) ? (
+          {reserveButtonDisabled ? (
+            <SubmitButton pendingLabel="Reserving...">Reserve now</SubmitButton>
+          ) : (
             <p className="text-primary-300 text-lg px-8 py-4">
               Start by selecting dates
             </p>
-          ) : (
-            <SubmitButton pendingLabel="Reserving...">Reserve now</SubmitButton>
           )}
         </div>
       </form>
