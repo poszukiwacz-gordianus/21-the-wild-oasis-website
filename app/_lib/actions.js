@@ -90,9 +90,8 @@ export async function createBooking(bookingData, formData) {
 
 export async function updateBooking(formData) {
   const bookingId = Number(formData.get("bookingId"));
-  const { hasBreakfast, totalPrice, extrasPrice, numNights } = await getBooking(
-    bookingId
-  );
+  const { hasBreakfast, totalPrice, extrasPrice, numNights, numGuests } =
+    await getBooking(bookingId);
   const { breakfastPrice } = await getSettings();
 
   // 1) Authentication
@@ -116,13 +115,16 @@ export async function updateBooking(formData) {
       formData.get("updateBreakfast") === "true" ? !hasBreakfast : hasBreakfast,
   };
 
-  if (formData.get("updateBreakfast") === "true" && !hasBreakfast) {
+  if (
+    (formData.get("updateBreakfast") === "true" && !hasBreakfast) ||
+    (numGuests !== Number(formData.get("numGuests")) && hasBreakfast)
+  ) {
     extraPrice = breakfastPrice * Number(formData.get("numGuests")) * numNights;
 
     updateData = {
       ...updateData,
       extrasPrice: extraPrice,
-      totalPrice: totalPrice + extraPrice,
+      totalPrice: totalPrice - extrasPrice + extraPrice,
     };
   }
 
