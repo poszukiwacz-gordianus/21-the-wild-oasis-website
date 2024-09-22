@@ -144,7 +144,7 @@ function ReservationForm({ cabin, user, settings: { breakfastPrice } }) {
         </div>
 
         <div className="flex justify-end gap-6">
-          {!(startDate && endDate) ? (
+          {!(from && to) ? (
             <p className="text-primary-300 text-lg px-8 py-4">
               Start by selecting dates
             </p>
