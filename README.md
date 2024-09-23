@@ -16,6 +16,9 @@ Finall project in Jonas Schmedtmann's <a href="https://www.udemy.com/course/the-
 10. Updated the account page to show users information about their upcoming stay, including check-in time if it's the check-in day, and the number of nights left if the guest is checked in.
 11. Disabled days in DayPicker that the guest has already reserved.
 12. Added a server-side check to prevent double-booking of cabins before adding a new reservation.
+13. Added redirect to the cabin page after user login if they were previously on the cabin page.
+14. Stored selected date range in localStorage to ensure it persists across user login.
+15. Added cookie consent
 
 ## Deployed on Vercel
 
