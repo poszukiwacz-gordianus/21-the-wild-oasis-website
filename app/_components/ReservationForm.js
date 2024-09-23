@@ -105,7 +105,9 @@ function ReservationForm({
             setBreakfastPrice(0);
             setGuestsNumber(0);
           }
+          //Reset range in localStorage nad useReservation provider
           resetRange();
+          localStorage.removeItem("dateRange");
         }}
         className="bg-primary-900 py-5 px-16 flex gap-5 flex-col"
       >

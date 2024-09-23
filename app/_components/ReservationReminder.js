@@ -3,9 +3,19 @@
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { format } from "date-fns";
 import { useReservation } from "./ReservationContext";
+import { useEffect } from "react";
 
 function ReservationReminder() {
-  const { range, resetRange } = useReservation();
+  const { range, resetRange, setRange } = useReservation();
+
+  // Setup date range
+  useEffect(() => {
+    // Retrieve the date range from localStorage
+    const storedDateRange = localStorage.getItem("dateRange");
+    if (storedDateRange) {
+      setRange(JSON.parse(storedDateRange));
+    }
+  }, [setRange]);
 
   if (!range.from || !range.to) return null;
 
@@ -18,7 +28,11 @@ function ReservationReminder() {
       </p>
       <button
         className="rounded-full p-1 hover:bg-accent-600 transition-all"
-        onClick={resetRange}
+        onClick={() => {
+          //Reset range in localStorage nad useReservation provider
+          resetRange();
+          localStorage.removeItem("dateRange");
+        }}
       >
         <XMarkIcon className="h-5 w-5" />
       </button>

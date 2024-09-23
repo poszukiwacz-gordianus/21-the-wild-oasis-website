@@ -40,7 +40,6 @@ function DateSelector({ settings, cabin, bookedDates }) {
     if (storedDateRange) {
       setRange(JSON.parse(storedDateRange));
       // Optionally clear the localStorage if you no longer need it
-      localStorage.removeItem("dateRange");
     }
     setBreakfastPrice(0);
     setGuestsNumber(0);
@@ -64,9 +63,13 @@ function DateSelector({ settings, cabin, bookedDates }) {
         className="place-self-center h-full content-center"
         mode="range"
         onSelect={(range) => {
-          if (!range) resetRange();
-          if (isAlreadyBooked(range, bookedDates)) resetRange();
-          else setRange(range);
+          if (!range || isAlreadyBooked(range, bookedDates)) {
+            resetRange();
+            localStorage.removeItem("dateRange");
+          } else {
+            setRange(range);
+            localStorage.setItem("dateRange", JSON.stringify(range));
+          }
         }}
         selected={displayedRange}
         min={minBookingLength + 1}
@@ -117,7 +120,10 @@ function DateSelector({ settings, cabin, bookedDates }) {
         {range.from || range.to ? (
           <button
             className="border border-primary-800 py-2 px-4 text-sm font-semibold"
-            onClick={resetRange}
+            onClick={() => {
+              resetRange();
+              localStorage.removeItem("dateRange");
+            }}
           >
             Clear
           </button>
