@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import bg from "@/public/bg.png";
+import Cookies from "@/app/_components/Cookies";
 
 export default function Page() {
   return (
@@ -24,6 +25,7 @@ export default function Page() {
         >
           Explore luxury cabins
         </Link>
+        <Cookies />
       </div>
     </main>
   );
