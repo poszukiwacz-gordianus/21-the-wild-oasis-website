@@ -11,6 +11,7 @@ import {
 } from "./data-service";
 import { redirect } from "next/navigation";
 import { isWithinInterval } from "date-fns";
+import { cookies } from "next/headers";
 
 export async function updateGuest(formData) {
   const session = await auth();
@@ -186,9 +187,19 @@ export async function deleteBooking(bookingId) {
 }
 
 export async function signInAction() {
-  await signIn("google", { redirectTo: "/account" });
+  const cookieValue = cookies().get("currentPathname")?.value || "/account";
+  await deleteCookieAction();
+
+  await signIn("google", { redirectTo: cookieValue });
 }
 
 export async function signOutAction() {
+  await deleteCookieAction();
+
   await signOut({ redirectTo: "/" });
+}
+
+export async function deleteCookieAction() {
+  const cookieStore = cookies();
+  cookieStore.delete("currentPathname");
 }

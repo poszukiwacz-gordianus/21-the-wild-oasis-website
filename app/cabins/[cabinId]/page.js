@@ -5,6 +5,7 @@ import Spinner from "@/app/_components/Spinner";
 import Cabin from "@/app/_components/Cabin";
 
 import { getCabin, getCabins } from "@/app/_lib/data-service";
+import { auth } from "@/app/_lib/auth";
 
 export async function generateMetadata({ params: { cabinId } }) {
   const { name } = await getCabin(Number(cabinId));
@@ -26,10 +27,11 @@ export const revalidate = 60;
 export default async function Page({ params: { cabinId } }) {
   const cabin = await getCabin(Number(cabinId));
   const cabins = await getCabins();
+  const session = await auth();
 
   return (
     <div className="max-w-6xl mx-auto mt-8">
-      <Cabin cabin={cabin} cabins={cabins} />
+      <Cabin cabin={cabin} cabins={cabins} session={session} />
       <div>
         <h2 className="text-[2.5rem] font-semibold text-center mb-10 text-accent-400">
           Reserve {cabin.name} today. Pay on arrival.

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth } from "../_lib/auth";
+import GuestAreaButton from "./GuestAreaButton";
 
 export default async function Navigation() {
   const session = await auth();
-
   return (
     <nav className="z-10">
       <ul className="flex gap-16 items-center">
@@ -42,12 +42,7 @@ export default async function Navigation() {
               <span>Guest area</span>
             </Link>
           ) : (
-            <Link
-              href="/account"
-              className="hover:text-accent-400 transition-colors"
-            >
-              Guest area
-            </Link>
+            <GuestAreaButton />
           )}
         </li>
       </ul>

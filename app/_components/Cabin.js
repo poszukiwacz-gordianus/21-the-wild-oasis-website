@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { setCookie } from "cookies-next";
 
 import {
   ChevronLeftIcon,
@@ -11,12 +13,19 @@ import {
 } from "@heroicons/react/24/solid";
 
 import TextExpander from "./TextExpander";
-import Link from "next/link";
 
 function Cabin({
   cabin: { id, name, image, description, maxCapacity },
   cabins,
+  session,
 }) {
+  // Set cookie if user is not login
+  if (!session?.user)
+    setCookie(`currentPathname`, `/cabins/${id}`, {
+      path: "/",
+      maxAge: "86400",
+    });
+
   // Navigation previus cabin, next cabin
   const index = cabins.findIndex((cabin) => cabin.id === id);
 
