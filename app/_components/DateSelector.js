@@ -33,10 +33,18 @@ function DateSelector({ settings, cabin, bookedDates }) {
     setGuestsNumber,
   } = useReservation();
 
+  // Setup default options
   useEffect(() => {
+    // Retrieve the date range from localStorage
+    const storedDateRange = localStorage.getItem("dateRange");
+    if (storedDateRange) {
+      setRange(JSON.parse(storedDateRange));
+      // Optionally clear the localStorage if you no longer need it
+      localStorage.removeItem("dateRange");
+    }
     setBreakfastPrice(0);
     setGuestsNumber(0);
-  }, [setBreakfastPrice, setGuestsNumber]);
+  }, [setBreakfastPrice, setGuestsNumber, setRange]);
 
   const displayedRange = isAlreadyBooked(range, bookedDates) ? {} : range;
 
