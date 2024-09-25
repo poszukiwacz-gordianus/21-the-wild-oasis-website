@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import { createGuest, getGuest } from "./data-service";
+import { getGuest } from "./data-service";
+import { createGuest } from "./actions";
 
 const authConfig = {
   providers: [
@@ -18,7 +19,10 @@ const authConfig = {
         const existingGuest = await getGuest(user.email);
 
         if (!existingGuest) {
-          await createGuest({ email: user.email, fullName: user.name });
+          await createGuest({
+            email: user.email,
+            fullName: user.name,
+          });
         }
 
         return true;

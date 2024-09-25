@@ -1,6 +1,7 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
+import { createLog } from "./actions";
 /////////////
 // GET
 
@@ -218,18 +219,4 @@ export async function getCountries() {
   } catch {
     throw new Error("Could not fetch countries");
   }
-}
-
-/////////////
-// CREATE
-
-export async function createGuest(newGuest) {
-  const { data, error } = await supabase.from("guests").insert([newGuest]);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Guest could not be created");
-  }
-
-  return data;
 }

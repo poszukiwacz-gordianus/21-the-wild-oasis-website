@@ -13,6 +13,25 @@ import { redirect } from "next/navigation";
 import { isWithinInterval } from "date-fns";
 import { cookies } from "next/headers";
 
+/////////////
+// CREATE
+
+export async function createGuest(newGuest) {
+  const { data, error } = await supabase
+    .from("guests")
+    .insert([newGuest])
+    .select();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Guest could not be created");
+  }
+
+  await createLog("account", data[0].id);
+
+  return data;
+}
+
 export async function updateGuest(formData) {
   const session = await auth();
   if (!session) throw new Error("You must be logged in");
@@ -87,9 +106,15 @@ export async function createBooking(bookingData, formData) {
     status: "unconfirmed",
   };
 
-  const { error } = await supabase.from("bookings").insert([newBooking]);
+  const { data, error } = await supabase
+    .from("bookings")
+    .insert([newBooking])
+    .select();
 
   if (error) return { error: "Booking could not be created" };
+
+  // Create log
+  await createLog("booking", data[0].id);
 
   revalidatePath(`/cabins/${bookingData.cabinId}`);
 
@@ -176,12 +201,18 @@ export async function deleteBooking(bookingId) {
   if (!guestBookingIds.includes(bookingId))
     throw new Error("You are not allowed to delete this booking");
 
+  //Delete Log if is with this id, needed to delete booking
+  await deleteLog(bookingId);
+
   const { error } = await supabase
     .from("bookings")
     .delete()
     .eq("id", bookingId);
 
   if (error) return { error: "Booking could not be deleted" };
+
+  // Create log
+  await createLog("canceled", session.user.guestId);
 
   revalidatePath("/account/reservations");
 }
@@ -202,4 +233,46 @@ export async function signOutAction() {
 export async function deleteCookieAction() {
   const cookieStore = cookies();
   cookieStore.delete("currentPathname");
+}
+
+//////////////////
+// CREATE LOG
+
+export async function createLog(log, key) {
+  let createLog = {
+    new: true,
+    created_account: null,
+    guestId: null,
+    new_booking: null,
+    bookingId: null,
+    canceled_booking: null,
+    canceled_by: null,
+  };
+
+  switch (log) {
+    case "account":
+      createLog = { ...createLog, created_account: true, guestId: key };
+      break;
+    case "booking":
+      createLog = { ...createLog, new_booking: true, bookingId: key };
+      break;
+    case "canceled":
+      createLog = {
+        ...createLog,
+        canceled_booking: true,
+        canceled_by: key,
+      };
+      break;
+
+    default:
+      createLog;
+      break;
+  }
+  await supabase.from("logs").insert([createLog]);
+}
+
+//////////////
+// DELETE LOG
+export async function deleteLog(id) {
+  await supabase.from("logs").delete().eq("bookingId", id);
 }
