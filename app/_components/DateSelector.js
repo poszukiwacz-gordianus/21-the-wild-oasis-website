@@ -5,6 +5,7 @@ import {
   isPast,
   isSameDay,
   isWithinInterval,
+  startOfToday,
 } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
@@ -85,7 +86,7 @@ function DateSelector({ settings, cabin, bookedDates }) {
         captionLayout="dropdown"
         numberOfMonths={2}
         disabled={(curDate) =>
-          isPast(curDate) ||
+          (isPast(curDate) && curDate < startOfToday()) ||
           bookedDates.some((date) => isSameDay(date, curDate))
         }
       />
