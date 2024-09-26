@@ -19,6 +19,7 @@ Finall project in Jonas Schmedtmann's <a href="https://www.udemy.com/course/the-
 13. Added redirect to the cabin page after user login if they were previously on the cabin page.
 14. Stored selected date range in localStorage to ensure it persists across user login.
 15. Added cookie consent
+16. Added logs for new user registrations, new reservations, and canceled reservations.
 
 ## Deployed on Vercel
 
