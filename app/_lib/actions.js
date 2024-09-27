@@ -135,7 +135,7 @@ export async function createBooking(bookingData, formData) {
     "New booking",
     `${data[0].guestId.fullName} has booked Cabin ${data[0].cabinId.name} for ${
       data[0].numGuests
-    } guest${data[0].numGuests > 1 && "s"}, from ${convertDateToLocale(
+    } guest${data[0].numGuests > 1 ? "s" : ""}, from ${convertDateToLocale(
       data[0].startDate.slice(0, 10)
     )} to
     ${convertDateToLocale(data[0].endDate.slice(0, 10))} (${
